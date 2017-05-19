@@ -50,8 +50,8 @@ void checksummer::sum(const char* data, size_t len) {
 }
 
 uint16_t checksummer::get() const {
-    __int128 csum1 = (csum & 0xffff'ffff'ffff'ffff) + (csum >> 64);
-    uint64_t csum = (csum1 & 0xffff'ffff'ffff'ffff) + (csum1 >> 64);
+    /*__int128*/ int64_t csum1 = (csum & 0xffff'ffff'ffff'ffff); // + (csum >> 64);
+    uint64_t csum = (csum1 & 0xffff'ffff'ffff'ffff); // + (csum1 >> 64);
     csum = (csum & 0xffff) + ((csum >> 16) & 0xffff) + ((csum >> 32) & 0xffff) + (csum >> 48);
     csum = (csum & 0xffff) + (csum >> 16);
     csum = (csum & 0xffff) + (csum >> 16);

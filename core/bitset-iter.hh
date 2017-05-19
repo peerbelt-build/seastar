@@ -19,7 +19,7 @@
 
 namespace bitsets {
 
-static constexpr int ulong_bits = std::numeric_limits<unsigned long>::digits;
+static constexpr int ullong_bits = std::numeric_limits<unsigned long long>::digits;
 
 /**
  * Returns the number of leading zeros in value's binary representation.
@@ -63,10 +63,23 @@ inline size_t count_leading_zeros<long long>(long long value)
 }
 
 template<>
+inline size_t count_leading_zeros<long long unsigned int>(long long unsigned int value)
+{
+    return __builtin_clzll(value) - 1;
+}
+
+template<>
 inline
 size_t count_trailing_zeros<unsigned long>(unsigned long value)
 {
     return __builtin_ctzl(value);
+}
+
+template<>
+inline
+size_t count_trailing_zeros<long long unsigned int>(long long unsigned int value)
+{
+    return __builtin_ctzll(value);
 }
 
 template<>
@@ -83,8 +96,8 @@ size_t count_trailing_zeros<long>(long value)
 template<size_t N>
 static inline size_t get_first_set(const std::bitset<N>& bitset)
 {
-    static_assert(N <= ulong_bits, "bitset too large");
-    return count_trailing_zeros(bitset.to_ulong());
+    static_assert(N <= ullong_bits, "bitset too large");
+    return count_trailing_zeros(bitset.to_ullong());
 }
 
 /**
@@ -94,8 +107,8 @@ static inline size_t get_first_set(const std::bitset<N>& bitset)
 template<size_t N>
 static inline size_t get_last_set(const std::bitset<N>& bitset)
 {
-    static_assert(N <= ulong_bits, "bitset too large");
-    return ulong_bits - 1 - count_leading_zeros(bitset.to_ulong());
+    static_assert(N <= ullong_bits, "bitset too large");
+    return ullong_bits - 1 - count_leading_zeros(bitset.to_ullong());
 }
 
 template<size_t N>
@@ -117,7 +130,7 @@ public:
         : _bitset(bitset)
         , _index(offset - 1)
     {
-        static_assert(N <= ulong_bits, "This implementation is inefficient for large bitsets");
+        static_assert(N <= ullong_bits, "This implementation is inefficient for large bitsets");
         _bitset >>= offset;
         advance();
     }

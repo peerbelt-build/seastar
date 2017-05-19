@@ -63,6 +63,10 @@ sstring formatter::to_json(long n) {
     return to_string(n);
 }
 
+sstring formatter::to_json(long long n) {
+    return to_string(n);
+}
+
 sstring formatter::to_json(float f) {
     if (std::isinf(f)) {
         throw out_of_range("Infinite float value is not supported");
@@ -98,6 +102,10 @@ sstring formatter::to_json(const jsonable& obj) {
 }
 
 sstring formatter::to_json(unsigned long l) {
+    return to_string(l);
+}
+
+sstring formatter::to_json(unsigned long long l) {
     return to_string(l);
 }
 

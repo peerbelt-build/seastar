@@ -22,7 +22,7 @@
 #pragma once
 
 #include <atomic>
-#include <xmmintrin.h>
+// #include <xmmintrin.h>
 
 namespace util {
 

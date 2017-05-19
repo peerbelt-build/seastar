@@ -706,7 +706,7 @@ receive_negotiation_frame(Connection& c, input_stream<char>& in) {
                 auto feature = static_cast<protocol_features>(read_le<uint32_t>(p));
                 auto f_len = read_le<uint32_t>(p + 4);
                 p += 8;
-                if (f_len > end - p) {
+                if ( ( (end - p) < 0 ) || (f_len > static_cast<uint32_t>( end - p ) ) ) {
                     c.get_protocol().log(c.peer_address(), "buffer underflow in feature data in negotiation frame");
                     return make_exception_future<feature_map>(closed_error());
                 }

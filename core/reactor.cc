@@ -75,7 +75,7 @@
 #include <system_error>
 #include <cxxabi.h>
 #endif
-
+     #define _mm_pause() asm volatile("" ::: "memory")
 #include <sys/mman.h>
 #include <sys/utsname.h>
 #include <linux/falloc.h>
@@ -89,7 +89,27 @@
 #include <osv/newpoll.hh>
 #endif
 
-#include <xmmintrin.h>
+// #if defined(_MSC_VER)
+//     /* Microsoft C/C++-compatible compiler */
+//     #include <intrin.h>
+// #elif defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__))
+//     /* GCC-compatible compiler, targeting x86/x86-64 */
+//     #include <x86intrin.h>
+// #elif defined(__GNUC__) && defined(__ARM_NEON__)
+//      /* GCC-compatible compiler, targeting ARM with NEON */
+//      #include <arm_neon.h>
+//      #define _mm_pause() asm volatile("" ::: "memory")
+// #elif defined(__GNUC__) && defined(__IWMMXT__)
+//     /* GCC-compatible compiler, targeting ARM with WMMX */
+//     #include <mmintrin.h>
+//     #define _mm_pause() asm volatile("" ::: "memory")
+// #elif (defined(__GNUC__) || defined(__xlC__)) && (defined(__VEC__) || defined(__ALTIVEC__))
+//      /* XLC or GCC-compatible compiler, targeting PowerPC with VMX/VSX */
+//      #include <altivec.h>
+// #elif defined(__GNUC__) && defined(__SPE__)
+//      /* GCC-compatible compiler, targeting PowerPC with SPE */
+//      #include <spe.h>
+// #endif
 #include "util/defer.hh"
 #include "core/metrics.hh"
 #include "execution_stage.hh"
@@ -108,7 +128,7 @@ constexpr std::chrono::milliseconds lowres_clock::_granularity;
 timespec to_timespec(steady_clock_type::time_point t) {
     using ns = std::chrono::nanoseconds;
     auto n = std::chrono::duration_cast<ns>(t.time_since_epoch()).count();
-    return { n / 1'000'000'000, n % 1'000'000'000 };
+    return { static_cast<time_t>(n / 1'000'000'000), static_cast<long>(n % 1'000'000'000) };
 }
 
 lowres_clock::lowres_clock() {
@@ -1469,7 +1489,7 @@ append_challenged_posix_file_impl::truncate(uint64_t length) {
 
 future<uint64_t>
 append_challenged_posix_file_impl::size() {
-    return make_ready_future<size_t>(_logical_size);
+    return make_ready_future<uint64_t>(_logical_size);
 }
 
 future<>
@@ -2000,7 +2020,7 @@ posix_file_impl::close() noexcept {
 
 future<uint64_t>
 blockdev_file_impl::size(void) {
-    return engine()._thread_pool.submit<syscall_result_extra<size_t>>([this] {
+    return engine()._thread_pool.submit<syscall_result_extra<uint64_t>>([this] {
         uint64_t size;
         int ret = ::ioctl(_fd, BLKGETSIZE64, &size);
         return wrap_syscall(ret, size);

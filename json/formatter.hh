@@ -99,6 +99,13 @@ public:
     static sstring to_json(long n);
 
     /**
+     * return a json formated long
+     * @param n the long to format
+     * @return the given long in a json format
+     */
+    static sstring to_json(long long n);
+
+    /**
      * return a json formated float
      * @param n the float to format
      * @return the given float in a json format
@@ -166,6 +173,13 @@ public:
      * @return the given unsigned long in a json format
      */
     static sstring to_json(unsigned long l);
+
+    /**
+     * return a json formated unsigned long
+     * @param l unsigned long to format
+     * @return the given unsigned long in a json format
+     */
+    static sstring to_json(unsigned long long l);
 
 private:
 

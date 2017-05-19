@@ -368,7 +368,7 @@ public:
         if ((buf.size() & (_file.disk_write_dma_alignment() - 1)) != 0) {
             // If buf size isn't aligned, copy its content into a new aligned buf.
             // This should only happen when the user calls output_stream::flush().
-            auto tmp = allocate_buffer(align_up(buf.size(), _file.disk_write_dma_alignment()));
+            auto tmp = allocate_buffer(align_up(buf.size(), static_cast<size_t>(_file.disk_write_dma_alignment())));
             ::memcpy(tmp.get_write(), buf.get(), buf.size());
             buf = std::move(tmp);
             p = buf.get();

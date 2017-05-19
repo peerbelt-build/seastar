@@ -861,7 +861,7 @@ qp_vhost::qp_vhost(device *dev, boost::program_options::variables_map opts)
     mem_table->nregions = 1;
     auto& region = mem_table->regions[0];
     region.guest_phys_addr = 0;
-    region.memory_size = (size_t(1) << 47) - 4096;
+    region.memory_size = (size_t(1) << ( ( static_cast<int32_t>( sizeof( size_t ) ) << 3 ) - 16 - 1 ) ) - 4096;
     region.userspace_addr = 0;
     region.flags_padding = 0;
     _vhost_fd.ioctl(VHOST_SET_MEM_TABLE, *mem_table);

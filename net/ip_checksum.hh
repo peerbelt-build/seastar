@@ -27,12 +27,14 @@
 #include <cstddef>
 #include <arpa/inet.h>
 
+
 namespace net {
 
 uint16_t ip_checksum(const void* data, size_t len);
 
 struct checksummer {
-    __int128 csum = 0;
+    // __int128 csum = 0;
+    int64_t csum = 0;
     bool odd = false;
     void sum(const char* data, size_t len);
     void sum(const packet& p);

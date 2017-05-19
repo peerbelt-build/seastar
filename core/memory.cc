@@ -138,7 +138,7 @@ static void on_allocation_failure(size_t size) {
     }
 }
 
-static constexpr unsigned cpu_id_shift = 36; // FIXME: make dynamic
+static constexpr unsigned cpu_id_shift = ( sizeof( uintptr_t ) << 3 ) - 28; // FIXME: make dynamic
 static constexpr unsigned max_cpus = 256;
 static constexpr size_t cache_line_size = 64;
 
@@ -176,7 +176,7 @@ static char* mem_base() {
     static char* known;
     static std::once_flag flag;
     std::call_once(flag, [] {
-        size_t alloc = size_t(1) << 44;
+        size_t alloc = ( size_t(1) << ( ( sizeof( uintptr_t ) < 7 ) ? 29 : 44 ) );
         auto r = ::mmap(NULL, 2 * alloc,
                     PROT_NONE,
                     MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE,
@@ -1381,7 +1381,7 @@ void* __libc_free(void* obj) throw ();
 extern "C"
 [[gnu::visibility("default")]]
 void* calloc(size_t nmemb, size_t size) {
-    auto s1 = __int128(nmemb) * __int128(size);
+    auto s1 = nmemb * size;
     assert(s1 == size_t(s1));
     size_t s = s1;
     auto p = malloc(s);
