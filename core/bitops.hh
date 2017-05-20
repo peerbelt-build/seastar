@@ -35,7 +35,7 @@ constexpr unsigned count_leading_zeros(unsigned long x) {
 }
 
 inline
-constexpr unsigned count_leading_zeros(unsigned long long x) {
+constexpr unsigned count_leading_zeros(uint64_t x) {
     return __builtin_clzll(x);
 }
 
@@ -50,7 +50,7 @@ constexpr unsigned count_trailing_zeros(unsigned long x) {
 }
 
 inline
-constexpr unsigned count_trailing_zeros(unsigned long long x) {
+constexpr unsigned count_trailing_zeros(uint64_t x) {
     return __builtin_ctzll(x);
 }
 

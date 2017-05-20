@@ -105,7 +105,7 @@ sstring formatter::to_json(unsigned long l) {
     return to_string(l);
 }
 
-sstring formatter::to_json(unsigned long long l) {
+sstring formatter::to_json(uint64_t l) {
     return to_string(l);
 }
 

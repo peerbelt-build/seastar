@@ -19,7 +19,7 @@
 
 namespace bitsets {
 
-static constexpr int ullong_bits = std::numeric_limits<unsigned long long>::digits;
+static constexpr int ullong_bits = std::numeric_limits<uint64_t>::digits;
 
 /**
  * Returns the number of leading zeros in value's binary representation.
@@ -59,7 +59,7 @@ inline size_t count_leading_zeros<long>(long value)
 template<>
 inline size_t count_leading_zeros<long long>(long long value)
 {
-    return __builtin_clzll((unsigned long long)value) - 1;
+    return __builtin_clzll((uint64_t)value) - 1;
 }
 
 template<>

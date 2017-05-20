@@ -112,7 +112,7 @@ class basic_sstring {
     }
 
     template <typename string_type>
-    static inline string_type to_sstring(unsigned long long value) {
+    static inline string_type to_sstring(uint64_t value) {
         return to_sstring_sprintf<string_type>(value, "%llu");
     }
 

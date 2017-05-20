@@ -179,7 +179,7 @@ public:
      * @param l unsigned long to format
      * @return the given unsigned long in a json format
      */
-    static sstring to_json(unsigned long long l);
+    static sstring to_json(uint64_t l);
 
 private:
 
